@@ -1,0 +1,276 @@
+{
+  "num_cols": [
+    "fine_amount",
+    "admin_fee",
+    "state_fee",
+    "late_fee",
+    "discount_amount",
+    "clean_up_cost",
+    "judgment_amount",
+    "lat",
+    "lon",
+    "hearing_issued_date_diff"
+  ],
+  "num_means": {
+    "fine_amount": 357.03529522141605,
+    "admin_fee": 20.0,
+    "state_fee": 10.0,
+    "late_fee": 33.65151238428822,
+    "discount_amount": 0.19595946960220165,
+    "clean_up_cost": 0.0,
+    "judgment_amount": 420.6502176632474,
+    "lat": 42.389746523453276,
+    "lon": -83.1115295740655,
+    "hearing_issued_date_diff": 72.64741032113398
+  },
+  "cat_cols": [
+    "agency_name",
+    "violation_code",
+    "disposition"
+  ],
+  "top_categories": {
+    "agency_name": [
+      "Buildings, Safety Engineering & Env Department",
+      "Department of Public Works",
+      "Health Department",
+      "Detroit Police Department"
+    ],
+    "violation_code": [
+      "9-1-36(a)",
+      "9-1-81(a)",
+      "22-2-88",
+      "9-1-104",
+      "22-2-88(b)",
+      "22-2-45",
+      "9-1-105",
+      "9-1-110(a)",
+      "9-1-43(a) - (Dwellin",
+      "9-1-103(C)",
+      "22-2-22",
+      "22-2-43",
+      "19450901",
+      "22-2-17",
+      "22-2-61",
+      "22-2-83(a)(b)(c)",
+      "9-1-82(d) - (Dwellin",
+      "61-81.0100/32.0066",
+      "9-1-43(a) - (Structu",
+      "22-2-83",
+      "22-2-88(a)",
+      "9-1-206",
+      "61-5-21",
+      "9-1-209",
+      "22-2-21(b)",
+      "9-1-101",
+      "9-1-107",
+      "9-1-43(a) - (Stories",
+      "9-1-111",
+      "9-1-201(a)",
+      "61-5-18",
+      "9-1-205"
+    ],
+    "disposition": [
+      "Responsible by Default",
+      "Responsible by Admission",
+      "Responsible by Determination",
+      "Responsible (Fine Waived) by Deter"
+    ]
+  },
+  "unknown_cat": "<unknown>",
+  "feature_names_cat": [
+    "agency_name_<unknown>",
+    "agency_name_Buildings, Safety Engineering & Env Department",
+    "agency_name_Department of Public Works",
+    "agency_name_Detroit Police Department",
+    "agency_name_Health Department",
+    "violation_code_19450901",
+    "violation_code_22-2-17",
+    "violation_code_22-2-21(b)",
+    "violation_code_22-2-22",
+    "violation_code_22-2-43",
+    "violation_code_22-2-45",
+    "violation_code_22-2-61",
+    "violation_code_22-2-83",
+    "violation_code_22-2-83(a)(b)(c)",
+    "violation_code_22-2-88",
+    "violation_code_22-2-88(a)",
+    "violation_code_22-2-88(b)",
+    "violation_code_61-5-18",
+    "violation_code_61-5-21",
+    "violation_code_61-81.0100/32.0066",
+    "violation_code_9-1-101",
+    "violation_code_9-1-103(C)",
+    "violation_code_9-1-104",
+    "violation_code_9-1-105",
+    "violation_code_9-1-107",
+    "violation_code_9-1-110(a)",
+    "violation_code_9-1-111",
+    "violation_code_9-1-201(a)",
+    "violation_code_9-1-205",
+    "violation_code_9-1-206",
+    "violation_code_9-1-209",
+    "violation_code_9-1-36(a)",
+    "violation_code_9-1-43(a) - (Dwellin",
+    "violation_code_9-1-43(a) - (Stories",
+    "violation_code_9-1-43(a) - (Structu",
+    "violation_code_9-1-81(a)",
+    "violation_code_9-1-82(d) - (Dwellin",
+    "violation_code_<unknown>",
+    "disposition_Responsible (Fine Waived) by Deter",
+    "disposition_Responsible by Admission",
+    "disposition_Responsible by Default",
+    "disposition_Responsible by Determination"
+  ],
+  "all_feature_names": [
+    "fine_amount",
+    "admin_fee",
+    "state_fee",
+    "late_fee",
+    "discount_amount",
+    "clean_up_cost",
+    "judgment_amount",
+    "lat",
+    "lon",
+    "hearing_issued_date_diff",
+    "agency_name_<unknown>",
+    "agency_name_Buildings, Safety Engineering & Env Department",
+    "agency_name_Department of Public Works",
+    "agency_name_Detroit Police Department",
+    "agency_name_Health Department",
+    "violation_code_19450901",
+    "violation_code_22-2-17",
+    "violation_code_22-2-21(b)",
+    "violation_code_22-2-22",
+    "violation_code_22-2-43",
+    "violation_code_22-2-45",
+    "violation_code_22-2-61",
+    "violation_code_22-2-83",
+    "violation_code_22-2-83(a)(b)(c)",
+    "violation_code_22-2-88",
+    "violation_code_22-2-88(a)",
+    "violation_code_22-2-88(b)",
+    "violation_code_61-5-18",
+    "violation_code_61-5-21",
+    "violation_code_61-81.0100/32.0066",
+    "violation_code_9-1-101",
+    "violation_code_9-1-103(C)",
+    "violation_code_9-1-104",
+    "violation_code_9-1-105",
+    "violation_code_9-1-107",
+    "violation_code_9-1-110(a)",
+    "violation_code_9-1-111",
+    "violation_code_9-1-201(a)",
+    "violation_code_9-1-205",
+    "violation_code_9-1-206",
+    "violation_code_9-1-209",
+    "violation_code_9-1-36(a)",
+    "violation_code_9-1-43(a) - (Dwellin",
+    "violation_code_9-1-43(a) - (Stories",
+    "violation_code_9-1-43(a) - (Structu",
+    "violation_code_9-1-81(a)",
+    "violation_code_9-1-82(d) - (Dwellin",
+    "violation_code_<unknown>",
+    "disposition_Responsible (Fine Waived) by Deter",
+    "disposition_Responsible by Admission",
+    "disposition_Responsible by Default",
+    "disposition_Responsible by Determination"
+  ],
+  "metrics": {
+    "train_accuracy": 0.9437327995996998,
+    "train_auc": 0.821226611205442,
+    "cv_roc_auc_mean": 0.8055715021761003,
+    "cv_roc_auc_std": 0.02425611910085598,
+    "confusion_matrix": [
+      [
+        148026,
+        257
+      ],
+      [
+        8739,
+        2858
+      ]
+    ]
+  },
+  "top_features": [
+    [
+      "late_fee",
+      0.2632281916298139
+    ],
+    [
+      "discount_amount",
+      0.19489248965365702
+    ],
+    [
+      "disposition_Responsible by Admission",
+      0.14288584088736012
+    ],
+    [
+      "disposition_Responsible by Determination",
+      0.1075428679262685
+    ],
+    [
+      "disposition_Responsible by Default",
+      0.08483485419201572
+    ],
+    [
+      "judgment_amount",
+      0.062286710155430386
+    ],
+    [
+      "hearing_issued_date_diff",
+      0.04381442911924476
+    ],
+    [
+      "disposition_Responsible (Fine Waived) by Deter",
+      0.017213668459544064
+    ],
+    [
+      "violation_code_9-1-36(a)",
+      0.013564852927951343
+    ],
+    [
+      "fine_amount",
+      0.012158040333261776
+    ],
+    [
+      "agency_name_Buildings, Safety Engineering & Env Department",
+      0.011502856345176017
+    ],
+    [
+      "lat",
+      0.010176127473050743
+    ],
+    [
+      "lon",
+      0.007344938416248381
+    ],
+    [
+      "violation_code_9-1-81(a)",
+      0.005043518339512605
+    ],
+    [
+      "violation_code_22-2-61",
+      0.0049138556014131085
+    ],
+    [
+      "violation_code_9-1-104",
+      0.0032118775248052276
+    ],
+    [
+      "agency_name_Department of Public Works",
+      0.0025227729143170166
+    ],
+    [
+      "agency_name_Health Department",
+      0.0018569495730838806
+    ],
+    [
+      "violation_code_22-2-88(b)",
+      0.0017052076436004984
+    ],
+    [
+      "violation_code_9-1-103(C)",
+      0.0014503670545068187
+    ]
+  ]
+}
