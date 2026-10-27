@@ -30,9 +30,9 @@ Develop an end-to-end **Machine Learning Decision Support System** to:
 
 ```mermaid
 flowchart TD
-    A["Municipal Challan Database (1,59,880+ Records)"] --> B["Spatial Geolocation Mapping (Ward & Coordinates)"]
+    A["Indian Municipal Challan Database (25,000 Records across BMC, BBMP, MCD, PMC)"] --> B["Spatial Geolocation Mapping (Ward & Coordinates)"]
     B --> C["Data Sanitization & Anti-Leakage Exclusion"]
-    C --> D["Feature Engineering (Notice-to-Hearing Days, Fees)"]
+    C --> D["Feature Engineering (Notice-to-Hearing Days, Fees in ₹)"]
     D --> E["Categorical Encoding & Imputation Pipeline"]
     E --> F["Gradient Boosting Decision Trees (GBDT)"]
     F --> G["Model Serialization (artifacts/blight_model.joblib)"]
@@ -106,8 +106,10 @@ streamlit run app.py
 
 ```text
 ├── app.py                                   # Streamlit Indian Civic Web Portal
+├── indian_municipal_challan_dataset.csv     # 25,000-Record Indian Municipal Challan Dataset (CSV)
 ├── train_and_save.py                        # Training and artifact generation pipeline
 ├── run_pipeline.py                          # Headless model evaluation & predictions script
+├── run_app.bat                              # 1-Click launcher script
 ├── Predicting Property Maintainance Fines.ipynb # Modernized Jupyter Notebook
 ├── requirements.txt                         # Pinned dependencies
 ├── README.md                                # Comprehensive microproject presentation documentation
