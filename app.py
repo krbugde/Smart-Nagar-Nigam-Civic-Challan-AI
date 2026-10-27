@@ -582,7 +582,7 @@ elif menu_choice == "📁 Bulk Ward Challan Inference":
     st.markdown("Upload bulk municipal challan CSV files to score compliance probabilities and risk tiers across entire city wards.")
     
     uploaded_file = st.file_uploader("Upload Municipal Challan CSV File:", type=["csv"])
-    use_sample = st.checkbox("Or test with preloaded sample cohort (100 Ward Challans)", value=True)
+    use_sample = st.checkbox("Or test with preloaded sample cohort (100 Ward Challans)", value=(uploaded_file is None))
     
     batch_df = None
     if uploaded_file is not None:
@@ -591,7 +591,14 @@ elif menu_choice == "📁 Bulk Ward Challan Inference":
         batch_df = sample_df.head(100).copy()
         
     if batch_df is not None and model is not None and metadata is not None:
-        st.write(f"Loaded **{len(batch_df)}** municipal challans for scoring.")
+        st.write(f"Loaded **{len(batch_df):,}** municipal challans for scoring.")
+        
+        # Display preview table
+        preview_cols = [c for c in ['challan_id', 'ticket_id', 'city', 'ward_name', 'issuing_department', 'agency_name', 'fine_amount_inr', 'fine_amount', 'disposition_order', 'disposition'] if c in batch_df.columns]
+        if preview_cols:
+            st.dataframe(batch_df[preview_cols].head(5), use_container_width=True)
+        else:
+            st.dataframe(batch_df.head(5), use_container_width=True)
         
         if st.button("🚀 Run Bulk Compliance Scoring", type="primary"):
             with st.spinner("Scoring challans with machine learning model..."):
@@ -599,12 +606,66 @@ elif menu_choice == "📁 Bulk Ward Challan Inference":
                 all_feats = metadata['all_feature_names']
                 proc_df = batch_df.copy()
                 
+                # Intelligent column mapping for Indian Municipal CSV vs Standard CSV
+                col_mappings = {
+                    'fine_amount_inr': 'fine_amount',
+                    'admin_processing_fee_inr': 'admin_fee',
+                    'state_cess_fee_inr': 'state_fee',
+                    'late_penalty_inr': 'late_fee',
+                    'early_discount_rebate_inr': 'discount_amount',
+                    'cleanup_cost_inr': 'clean_up_cost',
+                    'total_payable_inr': 'judgment_amount',
+                    'notice_to_hearing_days': 'hearing_issued_date_diff',
+                    'issuing_department': 'agency_name',
+                    'disposition_order': 'disposition',
+                    'violation_section': 'violation_code',
+                    'challan_id': 'ticket_id'
+                }
+                
+                # Map Indian currency values to model scale if needed
+                if 'fine_amount_inr' in proc_df.columns and 'fine_amount' not in proc_df.columns:
+                    proc_df['fine_amount'] = proc_df['fine_amount_inr'] / USD_TO_INR
+                if 'admin_processing_fee_inr' in proc_df.columns and 'admin_fee' not in proc_df.columns:
+                    proc_df['admin_fee'] = proc_df['admin_processing_fee_inr'] / USD_TO_INR
+                if 'state_cess_fee_inr' in proc_df.columns and 'state_fee' not in proc_df.columns:
+                    proc_df['state_fee'] = proc_df['state_cess_fee_inr'] / USD_TO_INR
+                if 'late_penalty_inr' in proc_df.columns and 'late_fee' not in proc_df.columns:
+                    proc_df['late_fee'] = proc_df['late_penalty_inr'] / USD_TO_INR
+                if 'early_discount_rebate_inr' in proc_df.columns and 'discount_amount' not in proc_df.columns:
+                    proc_df['discount_amount'] = proc_df['early_discount_rebate_inr'] / USD_TO_INR
+                if 'cleanup_cost_inr' in proc_df.columns and 'clean_up_cost' not in proc_df.columns:
+                    proc_df['clean_up_cost'] = proc_df['cleanup_cost_inr'] / USD_TO_INR
+                if 'total_payable_inr' in proc_df.columns and 'judgment_amount' not in proc_df.columns:
+                    proc_df['judgment_amount'] = proc_df['total_payable_inr'] / USD_TO_INR
+                if 'notice_to_hearing_days' in proc_df.columns and 'hearing_issued_date_diff' not in proc_df.columns:
+                    proc_df['hearing_issued_date_diff'] = proc_df['notice_to_hearing_days']
+                if 'latitude' in proc_df.columns and 'lat' not in proc_df.columns:
+                    proc_df['lat'] = proc_df['latitude']
+                if 'longitude' in proc_df.columns and 'lon' not in proc_df.columns:
+                    proc_df['lon'] = proc_df['longitude']
+                    
+                # Map categorical columns if Indian names present
+                if 'issuing_department' in proc_df.columns and 'agency_name' not in proc_df.columns:
+                    # Map to closest matching model categories
+                    inv_agency = {v: k for k, v in AGENCY_MAP_INDIAN.items()}
+                    proc_df['agency_name'] = proc_df['issuing_department'].map(lambda x: inv_agency.get(x, top_cats['agency_name'][0]))
+                    
+                if 'disposition_order' in proc_df.columns and 'disposition' not in proc_df.columns:
+                    inv_disp = {v: k for k, v in DISPOSITION_MAP_INDIAN.items()}
+                    proc_df['disposition'] = proc_df['disposition_order'].map(lambda x: inv_disp.get(x, top_cats['disposition'][0]))
+                    
+                if 'violation_section' in proc_df.columns and 'violation_code' not in proc_df.columns:
+                    # Extract section code if present (e.g., Section 354 -> closest violation_code)
+                    proc_df['violation_code'] = top_cats['violation_code'][0]
+                    
+                # Process numerical columns
                 for col in metadata['num_cols']:
                     if col not in proc_df.columns:
                         proc_df[col] = metadata['num_means'][col]
                     else:
                         proc_df[col] = pd.to_numeric(proc_df[col], errors='coerce').fillna(metadata['num_means'][col])
                         
+                # Process categorical columns
                 for col in metadata['cat_cols']:
                     if col not in proc_df.columns:
                         proc_df[col] = '<unknown>'
@@ -620,10 +681,19 @@ elif menu_choice == "📁 Bulk Ward Challan Inference":
                 X_batch = pd.concat([proc_df[metadata['num_cols']], encoded[metadata['feature_names_cat']]], axis=1)
                 X_batch = X_batch[all_feats]
                 
+                # Predict
                 batch_probs = model.predict_proba(X_batch)[:, 1]
                 batch_df['Compliance_Probability'] = np.round(batch_probs, 4)
                 batch_df['Compliance_Percentage'] = np.round(batch_probs * 100, 2)
-                batch_df['Fine_Amount_INR'] = np.round(batch_df['fine_amount'] * USD_TO_INR, 2)
+                
+                # Add Fine_Amount_INR safely
+                if 'fine_amount_inr' in batch_df.columns:
+                    batch_df['Fine_Amount_INR'] = batch_df['fine_amount_inr']
+                elif 'fine_amount' in batch_df.columns:
+                    batch_df['Fine_Amount_INR'] = np.round(batch_df['fine_amount'] * USD_TO_INR, 2)
+                else:
+                    batch_df['Fine_Amount_INR'] = 0.0
+                    
                 batch_df['Risk_Category'] = pd.cut(
                     batch_probs,
                     bins=[-0.01, 0.25, 0.55, 1.0],
@@ -631,13 +701,22 @@ elif menu_choice == "📁 Bulk Ward Challan Inference":
                 )
                 
                 st.success("✅ Batch scoring completed successfully!")
-                st.dataframe(
-                    batch_df[['ticket_id', 'Compliance_Percentage', 'Risk_Category', 'Fine_Amount_INR', 'agency_name', 'disposition']],
-                    use_container_width=True
-                )
+                
+                # Select available columns for output table
+                display_cols = []
+                for candidate in ['challan_id', 'ticket_id', 'city', 'ward_name', 'issuing_department', 'agency_name', 'disposition_order', 'disposition', 'Fine_Amount_INR', 'Compliance_Percentage', 'Risk_Category']:
+                    if candidate in batch_df.columns and candidate not in display_cols:
+                        display_cols.append(candidate)
+                        
+                st.dataframe(batch_df[display_cols], use_container_width=True)
                 
                 csv_bytes = batch_df.to_csv(index=False).encode('utf-8')
                 st.download_button(
+                    label="📥 Download Scored Challans CSV",
+                    data=csv_bytes,
+                    file_name="smart_nagar_nigam_scored_challans.csv",
+                    mime="text/csv"
+                )
                     label="📥 Download Scored Challans CSV",
                     data=csv_bytes,
                     file_name="smart_nagar_nigam_scored_challans.csv",
