@@ -156,7 +156,7 @@ st.sidebar.metric(label="Analysis Scope", value="1,59,880+ Challans")
 st.sidebar.caption("Government of India | Swachh Bharat Urban & Smart Cities Initiative")
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("### 📦 Export Project")
+st.sidebar.markdown("### 📦 Export Project & Datasets")
 zip_path = os.path.join(os.path.expanduser("~"), "Downloads", "Smart_Nagar_Nigam_Civic_Challan_AI.zip")
 if os.path.exists(zip_path):
     with open(zip_path, "rb") as f:
@@ -167,6 +167,18 @@ if os.path.exists(zip_path):
             mime="application/zip",
             use_container_width=True
         )
+
+indian_csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "indian_municipal_challan_dataset.csv")
+if os.path.exists(indian_csv_path):
+    with open(indian_csv_path, "rb") as f_csv:
+        st.sidebar.download_button(
+            label="📄 Download Indian Dataset (25k CSV)",
+            data=f_csv.read(),
+            file_name="indian_municipal_challan_dataset.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
+
 
 
 # Top Banner on Every Page
