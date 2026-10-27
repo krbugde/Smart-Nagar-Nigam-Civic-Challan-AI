@@ -717,11 +717,6 @@ elif menu_choice == "📁 Bulk Ward Challan Inference":
                     file_name="smart_nagar_nigam_scored_challans.csv",
                     mime="text/csv"
                 )
-                    label="📥 Download Scored Challans CSV",
-                    data=csv_bytes,
-                    file_name="smart_nagar_nigam_scored_challans.csv",
-                    mime="text/csv"
-                )
 
 # ==============================================================================
 # MODULE 5: MICROPROJECT REPORT (ENGLISH)
